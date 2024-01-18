@@ -1,33 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMoon } from '@fortawesome/free-regular-svg-icons'
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+
+const moonSvg = <FontAwesomeIcon icon={faMoon}/>
+const magnifyingGlassSvg = <FontAwesomeIcon icon={faMagnifyingGlass} />
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <header className="flex justify-between items-center px-4 py-8 bg-white">
+        <p className="text-lg font-bold">Where in the world?</p>
+        <div className="flex items-center gap-2">
+          {moonSvg}
+          <button className='font-semibold'>Dark Mode</button>
+        </div>
+      </header>
+      <main className='mt-4 px-4'>
+        <div className='flex' > 
+          <div className='p-4 bg-white rounded-s-md'>
+            {magnifyingGlassSvg}
+          </div>
+          <input className='p-4 w-full rounded-e-md' type="text" placeholder="Search for a country"/>
+          <select name="regions">
+            <option value="Placeholder">Filter by Region</option>
+            <option value="Africa">Africa</option>
+            <option value="America">America</option>
+            <option value="Asia">Asia</option>
+            <option value="Europe">Europe</option>
+            <option value="Oceania">Oceania</option>
+          </select>
+        </div>
+      </main>
     </>
   )
 }
