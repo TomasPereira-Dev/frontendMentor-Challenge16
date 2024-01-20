@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMoon } from '@fortawesome/free-regular-svg-icons'
 import { faMagnifyingGlass, faChevronDown } from '@fortawesome/free-solid-svg-icons'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import axios from 'axios'
 
 const moonSvg = <FontAwesomeIcon icon={faMoon}/>
@@ -12,7 +12,7 @@ const chevronDownSvg = <FontAwesomeIcon icon={faChevronDown} />
 function App() {
 
   const [inputVal, setInputVal] = useState("") 
-  const [selectedRegion, setSelectedRegion] = useState("all")
+  const [searchFilter, setSearchFilter] = useState("https://restcountries.com/v3.1/all")
   const [countries, setCountries] = useState([])
   const [isOpen, setIsOpen] = useState(false)
   const inputRef = useRef(null)
@@ -33,17 +33,28 @@ function App() {
     setIsOpen(!isOpen)
   }
 
-  useEffect(() => {
-    axios.get(`https://restcountries.com/v3.1/${selectedRegion}`)
+  const searchFilterHandler = useCallback(() => {
+    axios.get(searchFilter)
     .then((res) => {
       setCountries(res.data)
-      
     })
     .catch((error) => {
       console.log(error)
     })
-  }, [selectedRegion])
-  console.log(countries)
+  }, [searchFilter])
+
+  const fisrtCharToUpperCase = () => {
+    const nameArr = inputVal.split("")
+    const uppercaseChar = nameArr[0].toUpperCase()
+    nameArr.splice(0, 1, uppercaseChar)
+    const newName = nameArr.join("")
+    setSearchFilter(`https://restcountries.com/v3.1/name/${newName}`)
+  }
+
+  useEffect(() => {
+    searchFilterHandler()
+  }, [searchFilterHandler])
+
   return (
     <>
       <header className="flex justify-between items-center px-4 py-8 bg-white">
@@ -56,10 +67,10 @@ function App() {
       <main className='mt-4 px-4'>
         <div className='flex flex-col lg:flex-row lg:justify-between lg:items-center' > 
           <div className='flex items-center w-full lg:w-4/12'>
-            <div className='p-4 bg-white rounded-s-md cursor-pointer'>
+            <div className='p-4 bg-white rounded-s-md cursor-pointer' onClick={() => {fisrtCharToUpperCase()}}>
               {magnifyingGlassSvg}
             </div>
-            <input className='p-4 w-full rounded-e-md' ref={inputRef} onKeyDown={() => {setInputVal(inputRef.current.value)}} type="text" placeholder="Search for a country"/>
+            <input className='p-4 w-full rounded-e-md' ref={inputRef} onChange={() => {setInputVal(inputRef.current.value)}} type="text" placeholder="Search for a country"/>
           </div>
           <div className='relative'>
             <div className='flex justify-between items-center gap-12 p-4 mt-10 w-fit bg-white rounded-md cursor-pointer
@@ -70,11 +81,11 @@ function App() {
             <div className={`absolute -bottom-48 z-50 ${isOpen === true ? 'block': 'hidden'} w-52 bg-white rounded-md
             lg:bottom-auto`}>
               <ul className='flex flex-col gap-2 p-4'>
-                <li className='cursor-pointer' onClick={()=>{setSelectedRegion("region/africa")}}>Africa</li>
-                <li className='cursor-pointer' onClick={()=>{setSelectedRegion("region/america")}}>America</li>
-                <li className='cursor-pointer' onClick={()=>{setSelectedRegion("region/asia")}}>Asia</li>
-                <li className='cursor-pointer' onClick={()=>{setSelectedRegion("region/europe")}}>Europe</li>
-                <li className='cursor-pointer' onClick={()=>{setSelectedRegion("region/oceania")}}>Oceania</li>
+                <li className='cursor-pointer' onClick={()=>{setSearchFilter("https://restcountries.com/v3.1/region/africa")}}>Africa</li>
+                <li className='cursor-pointer' onClick={()=>{setSearchFilter("https://restcountries.com/v3.1/region/america")}}>America</li>
+                <li className='cursor-pointer' onClick={()=>{setSearchFilter("https://restcountries.com/v3.1/region/asia")}}>Asia</li>
+                <li className='cursor-pointer' onClick={()=>{setSearchFilter("https://restcountries.com/v3.1/region/europe")}}>Europe</li>
+                <li className='cursor-pointer' onClick={()=>{setSearchFilter("https://restcountries.com/v3.1/region/oceania")}}>Oceania</li>
               </ul>
             </div>
           </div>
