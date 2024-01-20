@@ -19,7 +19,7 @@ function App() {
   
   const mappedCountries = countries.map(country => 
     <div className='grid grid-rows-2 max-w-72 bg-white rounded-md' key={`${country.ccn3}`}>
-      <img className='rounded-t-md h-full w-full object-fit object-top' src={`${country.flags.png}`} alt={`${country.flags.alt}`}/>
+      <img className='h-full w-full max-h-60 object-fit object-top rounded-t-md' src={`${country.flags.png}`} alt={`${country.flags.alt}`}/>
       <div className='px-6 pt-6 pb-12'>
         <p className='mb-4 text-xl font-bold'>{country.name.common}</p>
         <p className='mb-2 text-sm'><span className='font-bold'>Population:</span> {country.population}</p>
@@ -54,19 +54,21 @@ function App() {
         </div>
       </header>
       <main className='mt-4 px-4'>
-        <div className='flex flex-col' > 
-          <div className='flex'>
+        <div className='flex flex-col lg:flex-row lg:justify-between lg:items-center' > 
+          <div className='flex items-center w-full lg:w-4/12'>
             <div className='p-4 bg-white rounded-s-md cursor-pointer'>
               {magnifyingGlassSvg}
             </div>
             <input className='p-4 w-full rounded-e-md' ref={inputRef} onKeyDown={() => {setInputVal(inputRef.current.value)}} type="text" placeholder="Search for a country"/>
           </div>
           <div className='relative'>
-            <div className='flex justify-between items-center gap-12 p-4 mt-10 w-fit bg-white rounded-md cursor-pointer' onClick={menuHandler}>
+            <div className='flex justify-between items-center gap-12 p-4 mt-10 w-fit bg-white rounded-md cursor-pointer
+            lg:mt-0' onClick={menuHandler}>
                 <p>Filter by Region</p>
                 {chevronDownSvg}
             </div>
-            <div className={`absolute -bottom-48 z-50 ${isOpen === true ? 'block': 'hidden'} w-52 bg-white rounded-md`}>
+            <div className={`absolute -bottom-48 z-50 ${isOpen === true ? 'block': 'hidden'} w-52 bg-white rounded-md
+            lg:bottom-auto`}>
               <ul className='flex flex-col gap-2 p-4'>
                 <li className='cursor-pointer' onClick={()=>{setSelectedRegion("region/africa")}}>Africa</li>
                 <li className='cursor-pointer' onClick={()=>{setSelectedRegion("region/america")}}>America</li>
