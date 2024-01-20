@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMoon } from '@fortawesome/free-regular-svg-icons'
 import { faMagnifyingGlass, faChevronDown } from '@fortawesome/free-solid-svg-icons'
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import axios from 'axios'
 
 const moonSvg = <FontAwesomeIcon icon={faMoon}/>
@@ -18,13 +18,13 @@ function App() {
   const inputRef = useRef(null)
   
   const mappedCountries = countries.map(country => 
-    <div className='max-w-72 bg-white rounded-md' key={`${country.ccn3}`}>
-      <img className='rounded-t-md' src={`${country.flags.svg}`} alt={`${country.flags.alt}`}/>
+    <div className='grid grid-rows-2 max-w-72 bg-white rounded-md' key={`${country.ccn3}`}>
+      <img className='rounded-t-md h-full w-full object-fit object-top' src={`${country.flags.png}`} alt={`${country.flags.alt}`}/>
       <div className='px-6 pt-6 pb-12'>
-        <p className='text-xl font-bold'>{country.name.common}</p>
-        <p className='text-sm'><span className='font-bold'>Population:</span> {country.population}</p>
-        <p className='text-sm'><span className='font-bold'>Region:</span> {country.region}</p>
-        <p className='text-sm'><span className='font-bold'>Capital:</span> {country.capital}</p>
+        <p className='mb-4 text-xl font-bold'>{country.name.common}</p>
+        <p className='mb-2 text-sm'><span className='font-bold'>Population:</span> {country.population}</p>
+        <p className='mb-2 text-sm'><span className='font-bold'>Region:</span> {country.region}</p>
+        <p className='mb-2 text-sm'><span className='font-bold'>Capital:</span> {country.capital}</p>
       </div>
     </div>
   )
@@ -61,12 +61,12 @@ function App() {
             </div>
             <input className='p-4 w-full rounded-e-md' ref={inputRef} onKeyDown={() => {setInputVal(inputRef.current.value)}} type="text" placeholder="Search for a country"/>
           </div>
-          <div className='w-fit'>
-            <div className='flex justify-between items-center gap-12 p-4 mt-10 bg-white rounded-md cursor-pointer' onClick={menuHandler}>
+          <div className='relative'>
+            <div className='flex justify-between items-center gap-12 p-4 mt-10 w-fit bg-white rounded-md cursor-pointer' onClick={menuHandler}>
                 <p>Filter by Region</p>
                 {chevronDownSvg}
             </div>
-            <div className={`${isOpen === true ? 'block': 'hidden'} bg-white rounded-md`}>
+            <div className={`absolute -bottom-48 z-50 ${isOpen === true ? 'block': 'hidden'} w-52 bg-white rounded-md`}>
               <ul className='flex flex-col gap-2 p-4'>
                 <li className='cursor-pointer' onClick={()=>{setSelectedRegion("region/africa")}}>Africa</li>
                 <li className='cursor-pointer' onClick={()=>{setSelectedRegion("region/america")}}>America</li>
@@ -77,7 +77,7 @@ function App() {
             </div>
           </div>
         </div>
-        <div className='grid justify-center gap-10 mt-10'>
+        <div className='grid justify-center gap-10 mt-10 lg:grid-cols-4'>
           {mappedCountries}
         </div>
       </main>
