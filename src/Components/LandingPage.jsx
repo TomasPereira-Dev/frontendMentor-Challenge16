@@ -4,16 +4,22 @@ import { faMoon } from '@fortawesome/free-regular-svg-icons'
 import { faMagnifyingGlass, faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
+import useSWR from 'swr'
 
 const moonSvg = <FontAwesomeIcon icon={faMoon}/>
 const magnifyingGlassSvg = <FontAwesomeIcon icon={faMagnifyingGlass} />
 const chevronDownSvg = <FontAwesomeIcon icon={faChevronDown} />
 
-function LandingPage({countries, searchFilterHandler}) {
+function LandingPage({searchFilterHandler, searchFilter}) {
 
     const [inputVal, setInputVal] = useState("") 
     const [isOpen, setIsOpen] = useState(false)
     const inputRef = useRef(null)
+
+    const fetcher = url => axios.get(url).then(res => res.data)
+    const {data, isLoading} = useSWR(searchFilter, fetcher)
+    const countries = isLoading  ? [] : Array.from(data)
   
     const menuHandler = () => {
       setIsOpen(!isOpen)
@@ -43,6 +49,10 @@ function LandingPage({countries, searchFilterHandler}) {
       </div>
   )
   
+    if (!data) return(
+      <h1>loading</h1>
+    )
+
     return (
       <>
         <header className="flex justify-between items-center px-4 py-8 bg-white">
@@ -79,7 +89,7 @@ function LandingPage({countries, searchFilterHandler}) {
             </div>
           </div>
           <div className='grid justify-center gap-10 mt-10 lg:grid-cols-4'>
-            {countries && mappedCountries}
+            {mappedCountries}
           </div>
         </main>
       </>
