@@ -16,7 +16,7 @@ function App() {
     <Routes>
       <Route path='/frontendMentor-Challenge16' element={<LandingPage searchFilter={searchFilter}
        searchFilterHandler={searchFilterHandler} />} />
-      <Route path='/frontendMentor-Challenge16/info/:countryId' element={<InfoPage searchFilter={searchFilter} />} />
+      <Route path='/frontendMentor-Challenge16/info/:countryId' element={<InfoPage searchFilter={searchFilter} searchFilterHandler={searchFilterHandler}/>} />
     </Routes>
     </>
   )
