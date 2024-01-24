@@ -55,14 +55,16 @@ function LandingPage({searchFilterHandler, searchFilter}) {
 
     return (
       <>
-        <header className="flex justify-between items-center px-4 py-8 bg-white">
-          <p className="text-lg font-bold">Where in the world?</p>
-          <div className="flex items-center gap-2">
-            {moonSvg}
-            <button className='font-semibold'>Dark Mode</button>
+        <header className="relative left-1/2 -z-10 w-screen -translate-x-1/2 px-4 py-8 bg-white">
+          <div className='relative left-1/2 max-w-screen-xl -translate-x-1/2 flex justify-between items-center'>
+            <p className="text-lg font-bold">Where in the world?</p>
+            <div className="flex items-center gap-2">
+              {moonSvg}
+              <button className='font-semibold'>Dark Mode</button>
+            </div>
           </div>
         </header>
-        <main className='mt-4 px-4'>
+        <main className='mt-4 px-4 lg:px-0'>
           <div className='flex flex-col lg:flex-row lg:justify-between lg:items-center' > 
             <div className='flex items-center w-full lg:w-4/12'>
               <div className='p-4 bg-white rounded-s-md cursor-pointer' onClick={() => {fisrtCharToUpperCase()}}>
