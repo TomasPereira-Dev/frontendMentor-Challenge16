@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import Spinner from './Spinner.jsx'
 import axios from 'axios'
 import useSWR from 'swr'
 
@@ -37,19 +38,18 @@ function LandingPage({searchFilterHandler, searchFilter}) {
               <img className='h-full w-full max-h-60 object-fit object-top rounded-t-md' src={`${country.flags.png}`} alt={`${country.flags.alt}`} onClick={()=>(searchFilterHandler(`https://restcountries.com/v3.1/name/${country.name.common}`))}/>
           </Link>
           <div className='px-6 pt-6 pb-12'>
-              <Link to={`/frontendMentor-Challenge16/info/${country.name.common}`}>
-                  <p className='mb-4 text-xl font-bold'>{country.name.common}</p>
-              </Link>  
-              <p className='mb-2 text-sm'><span className='font-bold'>Population:</span> {country.population}</p>
-              <p className='mb-2 text-sm'><span className='font-bold'>Region:</span> {country.region}</p>
-              <p className='mb-2 text-sm'><span className='font-bold'>Capital:</span> {country.capital}</p>
+            <Link to={`/frontendMentor-Challenge16/info/${country.name.common}`}>
+                <p className='mb-4 text-xl font-bold'>{country.name.common}</p>
+            </Link>  
+            <p className='mb-2 text-sm'><span className='font-bold'>Population:</span> {country.population}</p>
+            <p className='mb-2 text-sm'><span className='font-bold'>Region:</span> {country.region}</p>
+            <p className='mb-2 text-sm'><span className='font-bold'>Capital:</span> {country.capital}</p>
           </div>
       </div>
-  )
-  
-    if (!data) return(
-      <h1>loading</h1>
     )
+
+
+    if(!data) return <Spinner/>
 
     return (
       <>
@@ -58,7 +58,7 @@ function LandingPage({searchFilterHandler, searchFilter}) {
             <p className="text-xl font-bold">Where in the world?</p>
           </div>
         </header>
-        <main className='mt-4 px-4 lg:px-0'>
+        <main className='mt-4 px-3 lg:px-0'>
           <div className='flex flex-col lg:flex-row lg:justify-between lg:items-center' > 
             <div className='flex items-center w-full shadow-md lg:w-4/12'>
               <div className='p-4 bg-white rounded-s-md cursor-pointer' onClick={() => {fisrtCharToUpperCase()}}>

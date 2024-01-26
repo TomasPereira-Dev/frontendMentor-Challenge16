@@ -2,6 +2,7 @@
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
+import Spinner from "./Spinner.jsx";
 import useSWR from "swr";
 import axios from "axios";
 
@@ -10,8 +11,9 @@ const arrowLeftSvg = <FontAwesomeIcon icon={faArrowLeft}/>
 const InfoPage = ({ searchFilter, searchFilterHandler }) => { 
 
     const fetcher = url => axios.get(url).then(res => res.data)
-    const {data, isLoading} = useSWR(searchFilter, fetcher, {revalidateOnMount: true})
+    const {data, isLoading} = useSWR(searchFilter, fetcher)
     const countries = isLoading ? [] : Array.from(data)
+    
     const borderCountries = countries !== undefined && countries.length > 0 ? countries[0].borders : null
 
     const mappedBorders = borderCountries ? borderCountries.map(border => 
@@ -21,12 +23,10 @@ const InfoPage = ({ searchFilter, searchFilterHandler }) => {
         </div>
     ) : <p className="bg-white px-6 py-2 text-center shadow-md">None</p>
 
-    if (isLoading) return(
-        <>
-            <h1>loading</h1>
-        </>
-    )
-     return (
+
+    if(!data) return <Spinner/>
+
+     return(
         <>
             <header className="relative left-1/2 -z-10 w-screen -translate-x-1/2 px-3 py-6 bg-white shadow-md">
                 <div className="relative left-1/2 max-w-screen-xl -translate-x-1/2 flex justify-between items-center">
@@ -35,15 +35,16 @@ const InfoPage = ({ searchFilter, searchFilterHandler }) => {
             </header>
             <main className="px-4 py-8 lg:px-0">
                 <div className="shadow-md w-fit">
-                    <Link to="/frontendMentor-Challenge16/">
+                    
                         <div className="flex items-center gap-2 bg-white px-8 py-2 w-fit">
                             {arrowLeftSvg}
-                            <button onClick={()=> {searchFilterHandler("https://restcountries.com/v3.1/all")}} type="button">Back</button>
+                            <Link to="/frontendMentor-Challenge16/">
+                                <button onClick={()=> {searchFilterHandler("https://restcountries.com/v3.1/all")}} type="button">Back</button>
+                            </Link> 
                         </div>
-                    </Link> 
                 </div>
+                
                 <div className="flex flex-col gap-12 mt-12 lg:flex-row lg:items-center">
-                    {console.log(countries[0])}
                     <div>
                         <img className="max-h-80" src={countries[0].flags.svg} alt=" flag" />
                     </div>
@@ -72,8 +73,7 @@ const InfoPage = ({ searchFilter, searchFilterHandler }) => {
                     </div>
                 </div>
             </main>
-        </>
-        
+        </> 
     )   
 }
 
