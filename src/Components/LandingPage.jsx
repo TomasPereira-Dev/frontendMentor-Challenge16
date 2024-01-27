@@ -23,7 +23,7 @@ function LandingPage({searchFilterHandler, searchFilter}) {
     const menuHandler = () => {
       setIsOpen(!isOpen)
     }
-  
+    
     const fisrtCharToUpperCase = () => {
       const nameArr = inputVal.split("")
       const uppercaseChar = nameArr[0].toUpperCase()
@@ -32,6 +32,13 @@ function LandingPage({searchFilterHandler, searchFilter}) {
       searchFilterHandler(`https://restcountries.com/v3.1/name/${newName}`)
     }
 
+    const enterKeyHandler = (key) => {
+      if(key === "Enter"){
+        fisrtCharToUpperCase()
+      }
+    }
+
+
     const mappedCountries = countries.map(country => 
       <div className='grid grid-rows-2 max-w-72 bg-white rounded-md shadow' key={`${country.ccn3}`}>
           <Link to={`/frontendMentor-Challenge16/info/${country.name.common}`}>
@@ -39,7 +46,7 @@ function LandingPage({searchFilterHandler, searchFilter}) {
           </Link>
           <div className='px-6 pt-6 pb-12'>
             <Link to={`/frontendMentor-Challenge16/info/${country.name.common}`}>
-                <p className='mb-4 text-xl font-bold'>{country.name.common}</p>
+                <p className='mb-4 text-xl font-bold' onClick={()=>(searchFilterHandler(`https://restcountries.com/v3.1/name/${country.name.common}`))}>{country.name.common}</p>
             </Link>  
             <p className='mb-2 text-sm'><span className='font-bold'>Population:</span> {country.population}</p>
             <p className='mb-2 text-sm'><span className='font-bold'>Region:</span> {country.region}</p>
@@ -64,7 +71,7 @@ function LandingPage({searchFilterHandler, searchFilter}) {
               <div className='p-4 bg-white rounded-s-md cursor-pointer' onClick={() => {fisrtCharToUpperCase()}}>
                 {magnifyingGlassSvg}
               </div>
-              <input className='p-4 w-full rounded-e-md' ref={inputRef} onChange={() => {setInputVal(inputRef.current.value)}} type="text" placeholder="Search for a country"/>
+              <input className='p-4 w-full rounded-e-md outline-none' ref={inputRef} onChange={() => {setInputVal(inputRef.current.value)}} onKeyDown={(e)=> {enterKeyHandler(e.key)}} type="text" placeholder="Search for a country"/>
             </div>
             <div className='relative'>
               <div className='flex justify-between items-center gap-12 p-4 mt-10 mb-2 w-fit bg-white rounded-md cursor-pointer shadow-md
