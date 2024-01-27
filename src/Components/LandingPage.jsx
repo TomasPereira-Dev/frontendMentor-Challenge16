@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faChevronDown } from '@fortawesome/free-solid-svg-icons'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Spinner from './Spinner.jsx'
 import axios from 'axios'
@@ -9,27 +9,43 @@ import useSWR from 'swr'
 
 const magnifyingGlassSvg = <FontAwesomeIcon icon={faMagnifyingGlass} />
 const chevronDownSvg = <FontAwesomeIcon icon={faChevronDown} />
+const regex = /^(?!\s*$)[a-zA-Z0-9\s]+$/g
 
 function LandingPage({searchFilterHandler, searchFilter}) {
 
     const [inputVal, setInputVal] = useState("") 
     const [isOpen, setIsOpen] = useState(false)
+    const [inputError, setInputError] = useState("hidden")
+    const [errorMsg, setErrorMsg] = useState("")
     const inputRef = useRef(null)
 
     const fetcher = url => axios.get(url).then(res => res.data)
-    const {data, isLoading} = useSWR(searchFilter, fetcher)
-    const countries = isLoading  ? [] : Array.from(data)
-  
+    const {data, error, isLoading} = useSWR(searchFilter, fetcher)
+    const countries = data !== undefined ? Array.from(data) : []
+
+    useEffect(() => {
+      if(error){
+        setErrorMsg("Country not found")
+        setInputError("block")
+      }
+    }, [error])
+
     const menuHandler = () => {
       setIsOpen(!isOpen)
     }
     
     const fisrtCharToUpperCase = () => {
-      const nameArr = inputVal.split("")
-      const uppercaseChar = nameArr[0].toUpperCase()
-      nameArr.splice(0, 1, uppercaseChar)
-      const newName = nameArr.join("")
-      searchFilterHandler(`https://restcountries.com/v3.1/name/${newName}`)
+      if(regex.test(inputVal)){
+        const nameArr = inputVal.split("")
+        const uppercaseChar = nameArr[0].toUpperCase()
+        nameArr.splice(0, 1, uppercaseChar)
+        const newName = nameArr.join("")
+        searchFilterHandler(`https://restcountries.com/v3.1/name/${newName}`)
+        setInputVal("")
+      }else{
+        setInputError("block")
+        setErrorMsg("Please, add a country")
+      }
     }
 
     const enterKeyHandler = (key) => {
@@ -39,7 +55,7 @@ function LandingPage({searchFilterHandler, searchFilter}) {
     }
 
 
-    const mappedCountries = countries.map(country => 
+    const mappedCountries = !error ? countries.map(country => 
       <div className='grid grid-rows-2 max-w-72 bg-white rounded-md shadow' key={`${country.ccn3}`}>
           <Link to={`/frontendMentor-Challenge16/info/${country.name.common}`}>
               <img className='h-full w-full max-h-60 object-fit object-top rounded-t-md' src={`${country.flags.png}`} alt={`${country.flags.alt}`} onClick={()=>(searchFilterHandler(`https://restcountries.com/v3.1/name/${country.name.common}`))}/>
@@ -53,10 +69,9 @@ function LandingPage({searchFilterHandler, searchFilter}) {
             <p className='mb-2 text-sm'><span className='font-bold'>Capital:</span> {country.capital}</p>
           </div>
       </div>
-    )
+    ) : null
 
-
-    if(!data) return <Spinner/>
+    if(isLoading) return <Spinner/>
 
     return (
       <>
@@ -67,11 +82,12 @@ function LandingPage({searchFilterHandler, searchFilter}) {
         </header>
         <main className='mt-4 px-3 lg:px-0'>
           <div className='flex flex-col lg:flex-row lg:justify-between lg:items-center' > 
-            <div className='flex items-center w-full shadow-md lg:w-4/12'>
-              <div className='p-4 bg-white rounded-s-md cursor-pointer' onClick={() => {fisrtCharToUpperCase()}}>
+            <div className='relative flex items-center w-full shadow-md lg:w-4/12'>
+              <div className={`p-4 bg-white rounded-s-md ${inputError === "block" ?  `outline outline-2 outline-red-400`: `outline-none`} cursor-pointer`} onClick={() => {fisrtCharToUpperCase()}}>
                 {magnifyingGlassSvg}
               </div>
-              <input className='p-4 w-full rounded-e-md outline-none' ref={inputRef} onChange={() => {setInputVal(inputRef.current.value)}} onKeyDown={(e)=> {enterKeyHandler(e.key)}} type="text" placeholder="Search for a country"/>
+              <input className={`p-4 w-full rounded-e-md ${inputError === "block" ? `outline outline-2 outline-red-400`: `outline-none`}`} ref={inputRef} onChange={() => {setInputVal(inputRef.current.value)}} onKeyDown={(e)=> {enterKeyHandler(e.key)}} type="text" placeholder="Search for a country"/>
+              <p className={`absolute -bottom-7 ${inputError} text-red-400 font-semibold`}>{errorMsg}</p>
             </div>
             <div className='relative'>
               <div className='flex justify-between items-center gap-12 p-4 mt-10 mb-2 w-fit bg-white rounded-md cursor-pointer shadow-md
