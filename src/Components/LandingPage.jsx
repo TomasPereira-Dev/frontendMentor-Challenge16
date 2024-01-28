@@ -13,38 +13,40 @@ const regex = /^(?!\s*$)[a-zA-Z0-9\s]+$/g
 
 function LandingPage({searchFilterHandler, searchFilter}) {
 
+    const fetcher = url => axios.get(url).then(res => res.data)
+    const {data, isLoading} = useSWR(searchFilter, fetcher)
+
+    const [countries, setCountries] = useState([])
     const [inputVal, setInputVal] = useState("") 
     const [isOpen, setIsOpen] = useState(false)
     const [inputError, setInputError] = useState("hidden")
     const [errorMsg, setErrorMsg] = useState("")
     const inputRef = useRef(null)
 
-    const fetcher = url => axios.get(url).then(res => res.data)
-    const {data, error, isLoading} = useSWR(searchFilter, fetcher)
-    const countries = data !== undefined ? Array.from(data) : []
-
-    useEffect(() => {
-      if(error){
-        setErrorMsg("Country not found")
-        setInputError("block")
-      }
-    }, [error])
-
     const menuHandler = () => {
       setIsOpen(!isOpen)
     }
     
     const fisrtCharToUpperCase = () => {
+      let i = 0
       if(regex.test(inputVal)){
         const nameArr = inputVal.split("")
         const uppercaseChar = nameArr[0].toUpperCase()
         nameArr.splice(0, 1, uppercaseChar)
         const newName = nameArr.join("")
-        searchFilterHandler(`https://restcountries.com/v3.1/name/${newName}`)
-        setInputVal("")
+        
+        while(i < data.length){
+          if(data[i].name.common === newName){
+            setCountries([data[i]])
+            setInputVal("")
+            inputRef.current.value = "" 
+            break
+          }else{
+            i++
+          }
+        }
       }else{
-        setInputError("block")
-        setErrorMsg("Please, add a country")
+        setCountries(Array.from(data))
       }
     }
 
@@ -54,8 +56,11 @@ function LandingPage({searchFilterHandler, searchFilter}) {
       }
     }
 
+    useEffect(() => {
+      if (data) setCountries(Array.from(data)) 
+    }, [data])
 
-    const mappedCountries = !error ? countries.map(country => 
+    const mappedCountries = countries.map(country => 
       <div className='grid grid-rows-2 max-w-72 bg-white rounded-md shadow' key={`${country.ccn3}`}>
           <Link to={`/frontendMentor-Challenge16/info/${country.name.common}`}>
               <img className='h-full w-full max-h-60 object-fit object-top rounded-t-md' src={`${country.flags.png}`} alt={`${country.flags.alt}`} onClick={()=>(searchFilterHandler(`https://restcountries.com/v3.1/name/${country.name.common}`))}/>
@@ -69,7 +74,7 @@ function LandingPage({searchFilterHandler, searchFilter}) {
             <p className='mb-2 text-sm'><span className='font-bold'>Capital:</span> {country.capital}</p>
           </div>
       </div>
-    ) : null
+    )
 
     if(isLoading) return <Spinner/>
 
@@ -83,7 +88,7 @@ function LandingPage({searchFilterHandler, searchFilter}) {
         <main className='mt-4 px-3 lg:px-0'>
           <div className='flex flex-col lg:flex-row lg:justify-between lg:items-center' > 
             <div className='relative flex items-center w-full shadow-md lg:w-4/12'>
-              <div className={`p-4 bg-white rounded-s-md ${inputError === "block" ?  `outline outline-2 outline-red-400`: `outline-none`} cursor-pointer`} onClick={() => {fisrtCharToUpperCase()}}>
+              <div className={`p-4 bg-white rounded-s-md ${inputError === "block" ?  `outline outline-2 outline-red-400`: `outline-none`} cursor-pointer`} onClick={fisrtCharToUpperCase}>
                 {magnifyingGlassSvg}
               </div>
               <input className={`p-4 w-full rounded-e-md ${inputError === "block" ? `outline outline-2 outline-red-400`: `outline-none`}`} ref={inputRef} onChange={() => {setInputVal(inputRef.current.value)}} onKeyDown={(e)=> {enterKeyHandler(e.key)}} type="text" placeholder="Search for a country"/>
