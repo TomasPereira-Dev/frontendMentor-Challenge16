@@ -1,11 +1,11 @@
 /* eslint-disable react/prop-types */
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faChevronDown } from '@fortawesome/free-solid-svg-icons'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import Spinner from './Spinner.jsx'
 import axios from 'axios'
 import useSWR from 'swr'
+import Spinner from './Spinner.jsx'
 
 const magnifyingGlassSvg = <FontAwesomeIcon icon={faMagnifyingGlass} />
 const chevronDownSvg = <FontAwesomeIcon icon={faChevronDown} />
@@ -17,38 +17,24 @@ function LandingPage({searchFilterHandler, searchFilter}) {
     const {data, isLoading} = useSWR(searchFilter, fetcher)
 
     const [countries, setCountries] = useState([])
-    const [inputVal, setInputVal] = useState('') 
     const [isOpen, setIsOpen] = useState(false)
-    const inputRef = useRef(null)
+    const [inputVal, setInputVal] = useState("")
 
     const menuHandler = () => {
       setIsOpen(!isOpen)
     }
 
-    const fisrtCharToUpperCase = () => {
+    const searchCountry = (event) => {
+      setInputVal(event)
       if(regex.test(inputVal)){
-        const nameArr = inputVal.split('')
-        const uppercaseChar = nameArr[0].toUpperCase()
-        nameArr.splice(0, 1, uppercaseChar)
-        const newName = nameArr.join('')
-        const filteredCountries = countries.filter((country) => newName === country.name.common)
-        setCountries(filteredCountries) 
-      }else{
-        setCountries(Array.from(data))
-      }
-      inputRef.current.value = '' 
-      setInputVal("")
-    }
-
-    const enterKeyHandler = (key) => {
-      if(key === 'Enter'){
-        fisrtCharToUpperCase()
+        const filteredCountries = countries.filter((country) => country.name.common.toLowerCase().includes(inputVal))
+        setCountries(filteredCountries)
       }
     }
 
-    useEffect(() => {
-      if (data) setCountries(Array.from(data))
-    },[data])
+    useEffect(() => { //sets the default value to an array of fetched data
+      if (data && inputVal == "") setCountries(Array.from(data))
+    },[data, inputVal])
 
     const mappedCountries =  countries.map(country => 
       <div className='grid grid-rows-2 max-w-72 bg-white rounded-md shadow' key={`${country.ccn3}`}>
@@ -78,10 +64,10 @@ function LandingPage({searchFilterHandler, searchFilter}) {
         <main className='mt-4 px-3 lg:px-0'>
           <div className='flex flex-col lg:flex-row lg:justify-between lg:items-center' > 
             <div className='relative flex items-center w-full shadow-md lg:w-4/12'>
-              <div className='p-4 bg-white rounded-s-md outline-none cursor-pointer' onClick={fisrtCharToUpperCase}>
+              <div className='p-4 bg-white rounded-s-md outline-none'>
                 {magnifyingGlassSvg}
               </div>
-              <input className= 'p-4 w-full rounded-e-md outline-none' ref={inputRef} onChange={() => {setInputVal(inputRef.current.value)}} onKeyDown={(e)=> {enterKeyHandler(e.key)}} type='text' placeholder='Search for a country'/>
+              <input className= 'p-4 w-full rounded-e-md outline-none' onChange={(e) => {searchCountry(e.target.value)}} type='text' placeholder='Search for a country'/>
             </div>
             <div className='relative'>
               <div className='flex justify-between items-center gap-12 p-4 mt-10 mb-2 w-fit bg-white rounded-md cursor-pointer shadow-md
