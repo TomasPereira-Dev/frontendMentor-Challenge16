@@ -15,6 +15,7 @@ function LandingPage({searchFilterHandler, searchFilter}) {
 
     const fetcher = url => axios.get(url).then(res => res.data)
     const {data, isLoading} = useSWR(searchFilter, fetcher)
+    
 
     const [countries, setCountries] = useState([])
     const [isOpen, setIsOpen] = useState(false)
@@ -32,8 +33,14 @@ function LandingPage({searchFilterHandler, searchFilter}) {
       }
     }
 
+    const filterByRegion = (region) => {
+        const filteredCountries = Array.from(data).filter((country) => country.region.includes(region))
+        setCountries(filteredCountries)
+    }
+
     useEffect(() => { //sets the default value to an array of fetched data
       if (data && inputVal == "") setCountries(Array.from(data))
+      console.log(data)
     },[data, inputVal])
 
     const mappedCountries =  countries.map(country => 
@@ -78,11 +85,11 @@ function LandingPage({searchFilterHandler, searchFilter}) {
               <div className={`absolute -bottom-48 z-50 ${isOpen === true ? 'block': 'hidden'} w-52 bg-white rounded-md shadow-md
               lg:bottom-auto`}>
                 <ul className='flex flex-col gap-2 p-4'>
-                  <li className='cursor-pointer' onClick={()=>{searchFilterHandler('https://restcountries.com/v3.1/region/africa')}}>Africa</li>
-                  <li className='cursor-pointer' onClick={()=>{searchFilterHandler('https://restcountries.com/v3.1/region/america')}}>America</li>
-                  <li className='cursor-pointer' onClick={()=>{searchFilterHandler('https://restcountries.com/v3.1/region/asia')}}>Asia</li>
-                  <li className='cursor-pointer' onClick={()=>{searchFilterHandler('https://restcountries.com/v3.1/region/europe')}}>Europe</li>
-                  <li className='cursor-pointer' onClick={()=>{searchFilterHandler('https://restcountries.com/v3.1/region/oceania')}}>Oceania</li>
+                  <li className='cursor-pointer' onClick={()=>{filterByRegion('Africa')}}>Africa</li>
+                  <li className='cursor-pointer' onClick={()=>{filterByRegion('America')}}>America</li>
+                  <li className='cursor-pointer' onClick={()=>{filterByRegion('Asia')}}>Asia</li>
+                  <li className='cursor-pointer' onClick={()=>{filterByRegion('Europe')}}>Europe</li>
+                  <li className='cursor-pointer' onClick={()=>{filterByRegion('Oceania')}}>Oceania</li>
                 </ul>
               </div>
             </div>
