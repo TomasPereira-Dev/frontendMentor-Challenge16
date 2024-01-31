@@ -33,10 +33,6 @@ function LandingPage({searchFilterHandler, searchFilter}) {
       setMenuOptions(["Default", "Alphabetical order", "Most populated", "Less populated"])
     }
 
-    const sortingHandler = () => {
-      
-    }
-
     const searchCountry = (event) => {
       setInputVal(event)
       if(regex.test(inputVal)){
@@ -50,10 +46,38 @@ function LandingPage({searchFilterHandler, searchFilter}) {
         setCountries(filteredCountries)
     }
 
+    const sortingHandler = (sort) => {
+      let dataCopy = data.slice()
+      switch(sort) {
+        case "Alphabetical order":
+          console.log(sort)
+          break;
+        case "Most populated":
+          for(let i = 0; i < dataCopy.length; i++){
+            for(let j = 0; j < dataCopy.length -1; j++){
+                const temp = dataCopy[j]
+                if(dataCopy[j].population < dataCopy[j + 1].population){
+                  console.log(dataCopy[j].population)
+                  dataCopy[j] = dataCopy[j + 1]
+                  dataCopy[j + 1] = temp
+                }
+              }
+            }  
+          setCountries(dataCopy)
+          break;
+        case "Less populated":
+          console.log(sort)
+          break;
+        default:
+          console.log(sort) 
+      }
+    }
+
     useEffect(() => { //sets the default value to an array of fetched data
       if (data && inputVal == "") setCountries(Array.from(data))
       console.log(data)
     },[data, inputVal])
+
 
     const mappedCountries =  countries.map(country => 
       <div className='grid grid-rows-2 max-w-72 bg-white rounded-md shadow' key={`${country.ccn3}`}>
@@ -89,8 +113,8 @@ function LandingPage({searchFilterHandler, searchFilter}) {
               <input className= 'p-4 w-full rounded-e-md outline-none' onChange={(e) => {searchCountry(e.target.value)}} type='text' placeholder='Search for a country'/>
             </div>
             <div className='flex flex-col lg:flex-row lg:gap-4'>
-              <SortingList function={sortingHandler} menuHandler={sortingMenuHandler} menuTitle={"Sort by"} menuOptions={menuOptions}  isOpen={sortingIsOpen}/>
-              <SortingList function={filterByRegion} menuHandler={filterMenuHandler}  menuTitle={"Filter by region"} menuOptions={menuOptions} isOpen={filterIsOpen}/>
+              <SortingList callback={sortingHandler} menuHandler={sortingMenuHandler} menuTitle={"Sort by"} menuOptions={menuOptions}  isOpen={sortingIsOpen}/>
+              <SortingList callback={filterByRegion} menuHandler={filterMenuHandler}  menuTitle={"Filter by region"} menuOptions={menuOptions} isOpen={filterIsOpen}/>
             </div>
           </div>
           <div className='grid justify-center gap-10 mt-10 lg:grid-cols-4'>

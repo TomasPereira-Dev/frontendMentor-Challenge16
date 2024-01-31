@@ -6,7 +6,7 @@ const chevronDownSvg = <FontAwesomeIcon icon={faChevronDown} />
 
 const SortingList = ({callback, menuHandler, isOpen, menuTitle, menuOptions}) => {
 
-    const options = menuOptions.map((option) => <li key={option} className='cursor-pointer' onClick={callback}>{option}</li>)
+    const options = menuOptions.map((option) => <li key={option} className='cursor-pointer' onClick={() => {callback(option)}}>{option}</li>)
 
     return(
         <div className='relative mt-2' onMouseEnter={menuHandler} onMouseLeave={menuHandler}>
