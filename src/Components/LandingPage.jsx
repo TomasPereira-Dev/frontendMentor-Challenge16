@@ -1,14 +1,15 @@
 /* eslint-disable react/prop-types */
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMagnifyingGlass, faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import useSWR from 'swr'
 import Spinner from './Spinner.jsx'
+import SortingList from './SortingList.jsx'
 
 const magnifyingGlassSvg = <FontAwesomeIcon icon={faMagnifyingGlass} />
-const chevronDownSvg = <FontAwesomeIcon icon={faChevronDown} />
+
 const regex = /^(?!\s*$)[a-zA-Z0-9\s]+$/g
 
 function LandingPage({searchFilterHandler, searchFilter}) {
@@ -16,13 +17,24 @@ function LandingPage({searchFilterHandler, searchFilter}) {
     const fetcher = url => axios.get(url).then(res => res.data)
     const {data, isLoading} = useSWR(searchFilter, fetcher)
     
-
     const [countries, setCountries] = useState([])
-    const [isOpen, setIsOpen] = useState(false)
+    const [filterIsOpen, setFilterIsOpen] = useState(false)
+    const [sortingIsOpen, setSortingIsOpen] = useState(false)
     const [inputVal, setInputVal] = useState("")
+    const [menuOptions, setMenuOptions] = useState([])
 
-    const menuHandler = () => {
-      setIsOpen(!isOpen)
+    const filterMenuHandler = () => {
+      setFilterIsOpen(!filterIsOpen)
+      setMenuOptions(["Africa","America","Asia","Europe","Oceania"])
+    }
+
+    const sortingMenuHandler = () => {
+      setSortingIsOpen(!sortingIsOpen)
+      setMenuOptions(["Default", "Alphabetical order", "Most populated", "Less populated"])
+    }
+
+    const sortingHandler = () => {
+      
     }
 
     const searchCountry = (event) => {
@@ -76,22 +88,9 @@ function LandingPage({searchFilterHandler, searchFilter}) {
               </div>
               <input className= 'p-4 w-full rounded-e-md outline-none' onChange={(e) => {searchCountry(e.target.value)}} type='text' placeholder='Search for a country'/>
             </div>
-            <div className='relative'>
-              <div className='flex justify-between items-center gap-12 p-4 mt-10 mb-2 w-fit bg-white rounded-md cursor-pointer shadow-md
-              lg:mt-0' onClick={menuHandler}>
-                  <p>Filter by Region</p>
-                  {chevronDownSvg}
-              </div>
-              <div className={`absolute -bottom-48 z-50 ${isOpen === true ? 'block': 'hidden'} w-52 bg-white rounded-md shadow-md
-              lg:bottom-auto`}>
-                <ul className='flex flex-col gap-2 p-4'>
-                  <li className='cursor-pointer' onClick={()=>{filterByRegion('Africa')}}>Africa</li>
-                  <li className='cursor-pointer' onClick={()=>{filterByRegion('America')}}>America</li>
-                  <li className='cursor-pointer' onClick={()=>{filterByRegion('Asia')}}>Asia</li>
-                  <li className='cursor-pointer' onClick={()=>{filterByRegion('Europe')}}>Europe</li>
-                  <li className='cursor-pointer' onClick={()=>{filterByRegion('Oceania')}}>Oceania</li>
-                </ul>
-              </div>
+            <div className='flex flex-col lg:flex-row lg:gap-4'>
+              <SortingList function={sortingHandler} menuHandler={sortingMenuHandler} menuTitle={"Sort by"} menuOptions={menuOptions}  isOpen={sortingIsOpen}/>
+              <SortingList function={filterByRegion} menuHandler={filterMenuHandler}  menuTitle={"Filter by region"} menuOptions={menuOptions} isOpen={filterIsOpen}/>
             </div>
           </div>
           <div className='grid justify-center gap-10 mt-10 lg:grid-cols-4'>

@@ -35,15 +35,13 @@ const InfoPage = ({ searchFilter, searchFilterHandler }) => {
             </header>
             <main className="px-4 py-8 lg:px-0">
                 <div className="shadow-md w-fit">
-                    
-                        <div className="flex items-center gap-2 bg-white px-8 py-2 w-fit">
-                            {arrowLeftSvg}
-                            <Link to="/frontendMentor-Challenge16/">
-                                <button onClick={()=> {searchFilterHandler("https://restcountries.com/v3.1/all")}} type="button">Back</button>
-                            </Link> 
-                        </div>
+                    <div className="flex items-center gap-2 bg-white px-8 py-2 w-fit">
+                        {arrowLeftSvg}
+                        <Link to="/frontendMentor-Challenge16/">
+                            <button onClick={()=> {searchFilterHandler("https://restcountries.com/v3.1/all")}} type="button">Back</button>
+                        </Link> 
+                    </div>
                 </div>
-                
                 <div className="flex flex-col gap-12 mt-12 lg:flex-row lg:items-center">
                     <div>
                         <img className="max-h-80" src={countries[0].flags.svg} alt=" flag" />
