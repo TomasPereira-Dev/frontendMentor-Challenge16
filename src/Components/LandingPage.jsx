@@ -66,10 +66,20 @@ function LandingPage({searchFilterHandler, searchFilter}) {
           setCountries(dataCopy)
           break;
         case "Less populated":
-          console.log(sort)
+          for(let i = 0; i < dataCopy.length; i++){
+            for(let j = 0; j < dataCopy.length -1; j++){
+                const temp = dataCopy[j]
+                if(dataCopy[j].population > dataCopy[j + 1].population){
+                  console.log(dataCopy[j].population)
+                  dataCopy[j] = dataCopy[j + 1]
+                  dataCopy[j + 1] = temp
+                }
+              }
+            }  
+          setCountries(dataCopy)
           break;
         default:
-          console.log(sort) 
+          setCountries(Array.from(data))
       }
     }
 
