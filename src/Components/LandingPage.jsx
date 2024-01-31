@@ -50,7 +50,16 @@ function LandingPage({searchFilterHandler, searchFilter}) {
       let dataCopy = data.slice()
       switch(sort) {
         case "Alphabetical order":
-          console.log(sort)
+          for(let i = 0; i < dataCopy.length; i++){
+            for(let j = 0; j < dataCopy.length -1; j++){
+                const temp = dataCopy[j]
+                if(dataCopy[j].name.common.charCodeAt(0) > dataCopy[j + 1].name.common.charCodeAt(0)){
+                  dataCopy[j] = dataCopy[j + 1]
+                  dataCopy[j + 1] = temp
+                }
+              }
+            }  
+          setCountries(dataCopy)
           break;
         case "Most populated":
           for(let i = 0; i < dataCopy.length; i++){
