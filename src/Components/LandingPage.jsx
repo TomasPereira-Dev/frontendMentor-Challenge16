@@ -50,49 +50,51 @@ function LandingPage({searchFilterHandler, searchFilter}) {
       let dataCopy = data.slice()
       switch(sort) {
         case "Alphabetical order":
-          for(let i = 0; i < dataCopy.length; i++){
-            for(let j = 0; j < dataCopy.length -1; j++){
-                const temp = dataCopy[j]
-                if(dataCopy[j].name.common.charCodeAt(0) > dataCopy[j + 1].name.common.charCodeAt(0)){
-                  dataCopy[j] = dataCopy[j + 1]
-                  dataCopy[j + 1] = temp
-                }
-              }
-            }  
-          setCountries(dataCopy)
+          setCountries(quickSort(dataCopy, 0, dataCopy.length - 1, true).reverse());
           break;
         case "Most populated":
-          setCountries(quickSort(dataCopy).reverse())
+          setCountries(quickSort(dataCopy).reverse());
           break;
         case "Less populated":
           setCountries(quickSort(dataCopy));
           break;
         default:
-          setCountries(Array.from(data))
+          setCountries(Array.from(data));
       }
     }
 
-    function quickSort(arr, left = 0, right = arr.length - 1) {
+    const quickSort = (arr, left = 0, right = arr.length - 1, alphabeticalOrder = false) => {
     if (left >= right) {
       return;
     }
-  
-    let pivotIndex = partition(arr, left, right);
-    quickSort(arr, left, pivotIndex - 1);
-    quickSort(arr, pivotIndex + 1, right);
+    
+    let pivotIndex = partition(arr, left, right, alphabeticalOrder);
+    quickSort(arr, left, pivotIndex - 1, alphabeticalOrder);
+    quickSort(arr, pivotIndex + 1, right, alphabeticalOrder);
   
     return arr;
   }
   
-  function partition(arr, left, right) {
+  function partition(arr, left, right, alphabeticalOrder) {
     let pivotValue = arr[right];
     let partitionIndex = left;
 
-    for (let i = left; i < right; i++) {
-      if (arr[i].population < pivotValue.population) {
-        swap(arr, i, partitionIndex);
-        partitionIndex++;
+    if(alphabeticalOrder){
+      for (let i = left; i < right; i++) {
+        if (arr[i].name.common.charCodeAt(0) > pivotValue.name.common.charCodeAt(0)) {
+          swap(arr, i, partitionIndex);
+          partitionIndex++;
+        }
       }
+    }else{
+      for (let i = left; i < right; i++) {
+        if (arr[i].population < pivotValue.population) {
+          swap(arr, i, partitionIndex);
+          partitionIndex++;
+        }
+    }
+
+ 
     }
     swap(arr, right, partitionIndex);
 
