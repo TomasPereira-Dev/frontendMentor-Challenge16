@@ -62,35 +62,49 @@ function LandingPage({searchFilterHandler, searchFilter}) {
           setCountries(dataCopy)
           break;
         case "Most populated":
-          for(let i = 0; i < dataCopy.length; i++){
-            for(let j = 0; j < dataCopy.length -1; j++){
-                const temp = dataCopy[j]
-                if(dataCopy[j].population < dataCopy[j + 1].population){
-                  console.log(dataCopy[j].population)
-                  dataCopy[j] = dataCopy[j + 1]
-                  dataCopy[j + 1] = temp
-                }
-              }
-            }  
-          setCountries(dataCopy)
+          setCountries(quickSort(dataCopy).reverse())
           break;
         case "Less populated":
-          for(let i = 0; i < dataCopy.length; i++){
-            for(let j = 0; j < dataCopy.length -1; j++){
-                const temp = dataCopy[j]
-                if(dataCopy[j].population > dataCopy[j + 1].population){
-                  console.log(dataCopy[j].population)
-                  dataCopy[j] = dataCopy[j + 1]
-                  dataCopy[j + 1] = temp
-                }
-              }
-            }  
-          setCountries(dataCopy)
+          setCountries(quickSort(dataCopy));
           break;
         default:
           setCountries(Array.from(data))
       }
     }
+
+    function quickSort(arr, left = 0, right = arr.length - 1) {
+    if (left >= right) {
+      return;
+    }
+  
+    let pivotIndex = partition(arr, left, right);
+    quickSort(arr, left, pivotIndex - 1);
+    quickSort(arr, pivotIndex + 1, right);
+  
+    return arr;
+  }
+  
+  function partition(arr, left, right) {
+    let pivotValue = arr[right];
+    let partitionIndex = left;
+
+    for (let i = left; i < right; i++) {
+      if (arr[i].population < pivotValue.population) {
+        swap(arr, i, partitionIndex);
+        partitionIndex++;
+      }
+    }
+    swap(arr, right, partitionIndex);
+
+    
+    return partitionIndex;
+  }
+  
+  function swap(arr, firstIndex, secondIndex) {
+    let temp = arr[firstIndex];
+    arr[firstIndex] = arr[secondIndex];
+    arr[secondIndex] = temp;
+  }
 
     useEffect(() => { //sets the default value to an array of fetched data
       if (data && inputVal == "") setCountries(Array.from(data))
