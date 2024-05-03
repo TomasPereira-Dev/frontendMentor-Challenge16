@@ -9,6 +9,7 @@ import axios from "axios";
 const arrowLeftSvg = <FontAwesomeIcon icon={faArrowLeft}/>;
 
 const InfoPage = ({ searchFilter }) => {
+    
     const {countryId} = useParams(); 
     const navigate = useNavigate();
     const fetcher = url => axios.get(url).then(res => res.data);
@@ -16,7 +17,6 @@ const InfoPage = ({ searchFilter }) => {
     const countries = useMemo(() => data.filter((country) => countryId.toLocaleLowerCase() === country.cca3.toLocaleLowerCase()), [countryId, data]);
 
     const borderCountries = countries !== undefined && countries.length > 0 ? countries[0].borders : null;
-    console.log(data)
 
     const mappedBorders = borderCountries ? borderCountries.map(border => 
         <div key={border}>
