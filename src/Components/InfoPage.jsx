@@ -1,25 +1,27 @@
-/* eslint-disable react/prop-types */
+import { useMemo } from "react";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Spinner from "./Spinner.jsx";
 import useSWR from "swr";
 import axios from "axios";
 
-const arrowLeftSvg = <FontAwesomeIcon icon={faArrowLeft}/>
+const arrowLeftSvg = <FontAwesomeIcon icon={faArrowLeft}/>;
 
-const InfoPage = ({ searchFilter, searchFilterHandler }) => { 
+const InfoPage = ({ searchFilter }) => {
+    const {countryId} = useParams(); 
+    const navigate = useNavigate();
+    const fetcher = url => axios.get(url).then(res => res.data);
+    const {data} = useSWR(searchFilter, fetcher);
+    const countries = useMemo(() => data.filter((country) => countryId.toLocaleLowerCase() === country.cca3.toLocaleLowerCase()), [countryId, data]);
 
-    const fetcher = url => axios.get(url).then(res => res.data)
-    const {data, isLoading} = useSWR(searchFilter, fetcher)
-    const countries = isLoading ? [] : Array.from(data)
-    
-    const borderCountries = countries !== undefined && countries.length > 0 ? countries[0].borders : null
+    const borderCountries = countries !== undefined && countries.length > 0 ? countries[0].borders : null;
+    console.log(data)
 
     const mappedBorders = borderCountries ? borderCountries.map(border => 
         <div key={border}>
-            <button className="bg-white px-8 py-2 shadow-md" onClick={()=> {searchFilterHandler(`https://restcountries.com/v3.1/alpha/${border}`)}}
-             type="button">{border}</button>
+            <Link to={`/${border}`} className="bg-white px-8 py-2 shadow-md" 
+             type="button">{border}</Link>
         </div>
     ) : <p className="bg-white px-6 py-2 text-center shadow-md">None</p>
 
@@ -37,14 +39,12 @@ const InfoPage = ({ searchFilter, searchFilterHandler }) => {
                 <div className="shadow-md w-fit">
                     <div className="flex items-center gap-2 bg-white px-8 py-2 w-fit">
                         {arrowLeftSvg}
-                        <Link to="/frontendMentor-Challenge16/">
-                            <button onClick={()=> {searchFilterHandler("https://restcountries.com/v3.1/all")}} type="button">Back</button>
-                        </Link> 
+                        <button onClick={() => navigate(-1)} type="button">Back</button> 
                     </div>
                 </div>
                 <div className="flex flex-col gap-12 mt-12 lg:flex-row lg:items-center">
                     <div>
-                        <img className="max-h-80" src={countries[0].flags.svg} alt=" flag" />
+                        <img className="max-h-80" src={countries[0].flags.svg} alt="flag" />
                     </div>
                     <div className="flex flex-col gap-6 lg:justify-between lg:gap-4">
                         <p className="text-2xl font-bold mb-6 lg:text-3xl">{countries[0].name.common}</p>
