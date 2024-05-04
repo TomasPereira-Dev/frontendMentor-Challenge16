@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import useSWR from 'swr';
 import Spinner from './Spinner.jsx';
@@ -11,7 +11,7 @@ const magnifyingGlassSvg = <FontAwesomeIcon icon={faMagnifyingGlass} />;
 
 const regex = /^(?!\s*$)[a-zA-Z0-9\s]+$/g;
 
-function LandingPage({searchFilterHandler, searchFilter}) {
+function LandingPage({searchFilter}) {
 
   const fetcher = url => axios.get(url).then(res => res.data);
   const {data, isLoading} = useSWR(searchFilter, fetcher);
@@ -21,6 +21,7 @@ function LandingPage({searchFilterHandler, searchFilter}) {
   const [sortingIsOpen, setSortingIsOpen] = useState(false);
   const [inputVal, setInputVal] = useState("");
   const [menuOptions, setMenuOptions] = useState([]);
+  const [pageNumber, setPageNumber] = useState(0);
   
   const filterMenuHandler = () => {
     setFilterIsOpen(!filterIsOpen);
@@ -104,13 +105,17 @@ function LandingPage({searchFilterHandler, searchFilter}) {
     arr[secondIndex] = temp;
   }
 
+  const scrollToTop = () => {
+    window.scrollTo({top: 0, left: 0, behavior: "smooth"});
+  }
+
 
   useEffect(() => { //sets the default value to an array of fetched data
     if (data && inputVal == "") setCountries(Array.from(data));
   },[data, inputVal])
 
 
-  const mappedCountries =  countries.slice(0 ,20).map(country => 
+  const mappedCountries =  countries.slice(pageNumber, pageNumber + 20).map(country => 
     <div className='grid grid-rows-2 max-w-72 bg-white rounded-md shadow' key={`${country.ccn3}`}>
         <Link to={`/${country.cca3}`}>
             <img className='h-full w-full max-h-60 object-fit object-top rounded-t-md' src={`${country.flags.png}`} alt={`${country.flags.alt}`}/>
@@ -153,16 +158,19 @@ function LandingPage({searchFilterHandler, searchFilter}) {
         </div>
         <nav className='flex justify-center my-10'>
           <ul className='flex gap-4 items-center justify-center'>
-            <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><NavLink>1</NavLink></li>
-            <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><NavLink>2</NavLink></li>
-            <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><NavLink>3</NavLink></li>
-            <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><NavLink>4</NavLink></li>
-            <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><NavLink>5</NavLink></li>
-            <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><NavLink>6</NavLink></li>
-            <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><NavLink>7</NavLink></li>
-            <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><NavLink>8</NavLink></li>
-            <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><NavLink>9</NavLink></li>
-            <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><NavLink>10</NavLink></li>
+            <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><button onClick={() => {setPageNumber(0); scrollToTop()}}>1</button></li>
+            <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><button onClick={() => {setPageNumber(20); scrollToTop()}}>2</button></li>
+            <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><button onClick={() => {setPageNumber(40); scrollToTop()}}>3</button></li>
+            <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><button onClick={() => {setPageNumber(60); scrollToTop()}}>4</button></li>
+            <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><button onClick={() => {setPageNumber(80); scrollToTop()}}>5</button></li>
+            <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><button onClick={() => {setPageNumber(100); scrollToTop()}}>6</button></li>
+            <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><button onClick={() => {setPageNumber(120); scrollToTop()}}>7</button></li>
+            <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><button onClick={() => {setPageNumber(140); scrollToTop()}}>8</button></li>
+            <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><button onClick={() => {setPageNumber(160); scrollToTop()}}>9</button></li>
+            <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><button onClick={() => {setPageNumber(180); scrollToTop()}}>10</button></li>
+            <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><button onClick={() => {setPageNumber(200); scrollToTop()}}>11</button></li>
+            <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><button onClick={() => {setPageNumber(220); scrollToTop()}}>12</button></li>
+            <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><button onClick={() => {setPageNumber(240); scrollToTop()}}>13</button></li>
           </ul>
         </nav>
       </main>
