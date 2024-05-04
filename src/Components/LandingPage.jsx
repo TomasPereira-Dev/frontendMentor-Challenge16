@@ -17,16 +17,11 @@ function LandingPage({searchFilter}) {
   const {data, isLoading} = useSWR(searchFilter, fetcher);
   
   const [countries, setCountries] = useState([]);
-  const [filterIsOpen, setFilterIsOpen] = useState(false);
   const [sortingIsOpen, setSortingIsOpen] = useState(false);
   const [inputVal, setInputVal] = useState("");
   const [menuOptions, setMenuOptions] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
-  
-  const filterMenuHandler = () => {
-    setFilterIsOpen(!filterIsOpen);
-    setMenuOptions(["Africa","America","Asia","Europe","Oceania"]);
-  }
+
   
   const sortingMenuHandler = () => {
     setSortingIsOpen(!sortingIsOpen);
@@ -39,14 +34,9 @@ function LandingPage({searchFilter}) {
     if(regex.test(inputVal)){
       const filteredCountries = countries.filter((country) => country.name.common.toLowerCase().includes(inputVal));
       setCountries(filteredCountries);
-      
     }
   }
 
-  const filterByRegion = (region) => {
-      const filteredCountries = Array.from(data).filter((country) => country.region.includes(region))
-      setCountries(filteredCountries)
-  }
 
   const sortingHandler = (sort) => {
     let dataCopy = data.slice()
@@ -152,7 +142,6 @@ function LandingPage({searchFilter}) {
           </div>
           <div className='flex flex-col lg:flex-row lg:gap-4'>
             <SortingList callback={sortingHandler} menuHandler={sortingMenuHandler} menuTitle={"Sort by"} menuOptions={menuOptions}  isOpen={sortingIsOpen}/>
-            <SortingList callback={filterByRegion} menuHandler={filterMenuHandler}  menuTitle={"Filter by region"} menuOptions={menuOptions} isOpen={filterIsOpen}/>
           </div>
         </div>
         <div className='grid justify-center gap-10 mt-10 lg:grid-cols-4'>
