@@ -35,9 +35,11 @@ function LandingPage({searchFilter}) {
 
   const searchCountry = (event) => {
     setInputVal(event);
+    setPageNumber(0);
     if(regex.test(inputVal)){
       const filteredCountries = countries.filter((country) => country.name.common.toLowerCase().includes(inputVal));
       setCountries(filteredCountries);
+      
     }
   }
 
@@ -115,7 +117,7 @@ function LandingPage({searchFilter}) {
   },[data, inputVal])
 
 
-  const mappedCountries =  countries.slice(pageNumber, pageNumber + 20).map(country => 
+  const mappedCountries = countries.slice(pageNumber, pageNumber + 20).map(country => 
     <div className='grid grid-rows-2 max-w-72 bg-white rounded-md shadow' key={`${country.ccn3}`}>
         <Link to={`/${country.cca3}`}>
             <img className='h-full w-full max-h-60 object-fit object-top rounded-t-md' src={`${country.flags.png}`} alt={`${country.flags.alt}`}/>
