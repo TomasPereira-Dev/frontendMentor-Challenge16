@@ -37,9 +37,9 @@ const InfoPage = ({ searchFilter }) => {
             </header>
             <main className="px-4 py-8 lg:px-0">
                 <div className="shadow-md w-fit">
-                    <div className="flex items-center gap-2 bg-white px-8 py-2 w-fit">
+                    <div className="flex items-center gap-2 bg-white px-8 py-2 w-fit cursor-pointer" onClick={() => navigate(-1)}>
                         {arrowLeftSvg}
-                        <button onClick={() => navigate(-1)} type="button">Back</button> 
+                        <p>Back</p> 
                     </div>
                 </div>
                 <div className="flex flex-col gap-12 mt-12 lg:flex-row lg:items-center">

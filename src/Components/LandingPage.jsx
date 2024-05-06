@@ -149,7 +149,7 @@ function LandingPage({searchFilter}) {
         </div>
         <nav className='flex justify-center my-10'>
           <ul className='flex gap-4 items-center justify-center'>
-            <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><button onClick={() => {setPageNumber(0); scrollToTop()}}>1</button></li>
+            <li className={`flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta`}><button onClick={() => {setPageNumber(0); scrollToTop()}}>1</button></li>
             <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><button onClick={() => {setPageNumber(20); scrollToTop()}}>2</button></li>
             <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><button onClick={() => {setPageNumber(40); scrollToTop()}}>3</button></li>
             <li className='flex items-center justify-center w-12 h-12 p-4 text-white font-semibold rounded-full bg-cta'><button onClick={() => {setPageNumber(60); scrollToTop()}}>4</button></li>
