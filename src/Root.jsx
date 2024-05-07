@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, ScrollRestoration } from 'react-router-dom'
 import LandingPage from './Components/LandingPage'
 import InfoPage from './Components/InfoPage'
 
@@ -10,7 +10,7 @@ function App() {
 
   return (
     <>
-    
+    <ScrollRestoration />
     <Routes>
       <Route path='/' element={<LandingPage searchFilter={searchFilter}
        searchFilterHandler={setSearchFilter} />} />

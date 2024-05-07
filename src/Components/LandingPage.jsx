@@ -129,7 +129,7 @@ function LandingPage({searchFilter}) {
     <>
       <header className='relative left-1/2 -z-10 w-screen -translate-x-1/2 px-3 py-6 bg-white shadow-md'>
         <div className='relative left-1/2 max-w-screen-xl -translate-x-1/2 flex justify-between items-center'>
-          <p className='text-xl font-bold'>Where in the world?</p>
+          <Link to={'/'}><p className='text-xl font-bold'>Where in the world?</p></Link>
         </div>
       </header>
       <main className='mt-4 px-3 lg:px-0'>

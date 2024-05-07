@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useMemo, useEffect, useState } from "react";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,20 +24,16 @@ const InfoPage = ({ searchFilter }) => {
 
     const mappedBorders = borderCountries ? borderCountries.map(border => 
         <div key={border}>
-            <Link to={`/${border}`} className="bg-white px-8 py-2 shadow-md" 
-             type="button">{border}</Link>
+            <Link to={`/${border}`} className="bg-white px-8 py-2 shadow-md">{border}</Link>
         </div>
     ) : <p className="bg-white px-6 py-2 text-center shadow-md">None</p>
-
-
-
 
     useEffect(() => {
         const unsplashApi = createApi({
             accessKey: "MDMSF70AivLLiRE1GcMLpBMdX4qWUgDn5SRruAwtCtI"
         })
 
-        unsplashApi.search.getPhotos({query: countries[0].name.common, orientation:"landscape", perPage: "6"})
+        unsplashApi.search.getPhotos({query: countries[0].name.common, orientation:"landscape", perPage: "4"})
         .then(result => {
             setCountryImages(result)
         })
@@ -64,12 +61,12 @@ const InfoPage = ({ searchFilter }) => {
 
      return(
         <>
-            <header className="relative left-1/2 -z-10 w-screen -translate-x-1/2 px-3 py-6 bg-white shadow-md">
+            <header className="relative left-1/2  w-screen -translate-x-1/2 px-3 py-6 bg-white shadow-md">
                 <div className="relative left-1/2 max-w-screen-xl -translate-x-1/2 flex justify-between items-center">
-                    <p className="text-lg font-bold">Where in the world?</p>
+                    <Link to={'/'}><p className='text-xl font-bold'>Where in the world?</p></Link>
                 </div> 
             </header>
-            <main className="flex flex-col gap-12 px-4 py-8 lg:px-0">
+            <main className="flex flex-col gap-16 mb-12 py-8 px-4">
                 <div className="shadow-md w-fit">
                     <div className="flex items-center gap-2 bg-white px-8 py-2 w-fit cursor-pointer" onClick={() => navigate(-1)}>
                         {arrowLeftSvg}
@@ -77,12 +74,12 @@ const InfoPage = ({ searchFilter }) => {
                     </div>
                 </div>
                 <section>
-                    <div className="flex flex-col gap-12 mt-12 lg:flex-row lg:items-center">
+                    <div className="flex flex-col gap-12 lg:flex-row lg:items-center">
                         <div>
                             <img className="max-h-80" src={countries[0].flags.svg} alt="flag" />
                         </div>
                         <div className="flex flex-col gap-6 lg:justify-between lg:gap-4">
-                            <h2 className="text-2xl font-bold mb-6 lg:text-3xl">{countries[0].name.common}</h2>
+                            <h1 className="text-3xl font-bold mb-6 lg:text-4xl">{countries[0].name.common}</h1>
                             <div className="lg:grid lg:grid-cols-2">
                                 <ul>  
                                     <li><span className="font-semibold">Native Name:</span>  {countries[0].name.nativeName[Object.keys(countries[0].name.nativeName)[0]].common}</li>
@@ -107,12 +104,12 @@ const InfoPage = ({ searchFilter }) => {
                     </div>            
                 </section>
                 <section className="grid gap-4">
-                    <h2 className="text-center text-2xl font-bold mb-4 md:text-left lg:text-3xl">About</h2>
-                    <p className="max-w-[68ch]">{wikiData.data && wikiData.data.extract}</p>
+                    <h2 className="text-center text-2xl font-bold md:text-left lg:text-3xl">About</h2>
+                    <p className="text-lg max-w-[60ch]">{wikiData.data && wikiData.data.extract}</p>
                 </section>
                 <section>
                     <h2 className="text-center text-2xl font-bold mb-4 md:text-left lg:text-3xl">Gallery</h2>
-                    <ul className="grid  md:grid-cols-3 gap-8">
+                    <ul className="grid  md:grid-cols-4 gap-6">
                         {countryImages && countryImages.response.results.map(image => (
                             <li key={image.id}>
                                 <ImageComp image={image}/>
@@ -120,7 +117,6 @@ const InfoPage = ({ searchFilter }) => {
                         ))}
                     </ul>
                 </section>
-
             </main>
         </> 
     )   
